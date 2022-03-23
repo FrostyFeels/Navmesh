@@ -24,15 +24,19 @@ public class VisionCone : MonoBehaviour
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
 
-        ray = Physics2D.LinecastAll(transform.position, mousePosition);
+        Vector2 dir = transform.position - mousePosition;
+        dir.Normalize();
+
+        ray = Physics2D.RaycastAll(transform.position, dir, 10);
         
 
         for (int i = 0; i < ray.Length; i++)
         {
-            Debug.Log(ray[i].collider);
+            
 
 
             Vector3Int pos = tiles.WorldToCell(ray[i].point);
+            Debug.Log(pos);
             tiles.SetTile(pos, tile);
 
 
