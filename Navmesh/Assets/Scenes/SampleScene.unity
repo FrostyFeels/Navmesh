@@ -193,7 +193,7 @@ MonoBehaviour:
   - {fileID: 1240526159}
   - {fileID: 439706319}
   _CalculatePath: 0
-  _Wait: 5
+  _Wait: 0
   _currentWait: 0
 --- !u!4 &38998467
 Transform:

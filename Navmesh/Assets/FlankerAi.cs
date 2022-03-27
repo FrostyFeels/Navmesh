@@ -230,13 +230,15 @@ public class FlankerAi : MonoBehaviour
         int nodeToTravel = ai.availableNodes[random];
         int currentNode = closestNodeNumber;
 
+        Debug.Log(nodeToTravel + " " + number);
+
         RemoveElement(ref ai.availableNodes, random);
     
         ai._AvailableNodes[nodeToTravel] = null;
 
 
 
-        while (currentNode != nodeToTravel)
+/*        while (currentNode != nodeToTravel)
         {
             currentNode++;
 
@@ -259,7 +261,35 @@ public class FlankerAi : MonoBehaviour
             }
 
             bottemCount++;
+        }*/
+
+        if(currentNode != nodeToTravel)
+        {
+            if(currentNode < nodeToTravel)
+            {
+                topCount = nodeToTravel - currentNode;
+            }
+           else if(currentNode > nodeToTravel)
+           {
+                topCount += currentNode + 1 + ai._FlankNodes.Length - nodeToTravel; ;
+           }         
         }
+
+        if (currentNode != nodeToTravel)
+        {
+            if(currentNode > nodeToTravel)
+            {
+                bottemCount = currentNode - nodeToTravel;
+            }
+
+            else if (currentNode < nodeToTravel)
+            {
+                bottemCount += ai._FlankNodes.Length - currentNode + 1 + nodeToTravel;
+            }
+            
+        }
+
+
 
 
         if (bottemCount < topCount)
@@ -272,8 +302,8 @@ public class FlankerAi : MonoBehaviour
             CalculateTopPath(topCount);
         }
 
-        bottemCount = 0;
-        topCount = 0;
+        //bottemCount = 0;
+        //topCount = 0;
 
         if(ai.flankers.Length > number + 1)
         {
