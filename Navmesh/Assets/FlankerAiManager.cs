@@ -132,7 +132,7 @@ public class FlankerAiManager : MonoBehaviour
     {
         Vector3 startLocation = point + direction;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
             RaycastHit2D hit = Physics2D.Linecast(startLocation, homePoint, layer);
 
@@ -147,6 +147,12 @@ public class FlankerAiManager : MonoBehaviour
                 else if (distanceToPlayer == distance)
                 {
                     _FlankNodes[number].transform.position = hit.point + (Vector2)direction;
+
+
+                    if (Vector3.Distance(_FlankNodes[number].transform.position, player.position) < flankNodeDistance)
+                    {
+                        _FlankNodes[number].transform.position = homePoint + (_FlankDirections[number] * flankNodeDistance);
+                    }
                     return;
                 }
                 else

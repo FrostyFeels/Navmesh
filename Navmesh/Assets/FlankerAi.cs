@@ -29,7 +29,7 @@ public class FlankerAi : MonoBehaviour
     [Header("Prefabs")]
 
 
-    public GameObject closetNode;
+    public GameObject closestNode;
     public int closestNodeNumber;
     public float _DistanceToFirstNode;
     public int currentNode;
@@ -38,8 +38,8 @@ public class FlankerAi : MonoBehaviour
     
 
 
-    public bool topPath, bottemPath;
-    public int topCount, bottemCount;
+    public bool topPath, bottomPath;
+    public int topCount, bottomCount;
     public int stepCount;
     public int steps;
 
@@ -70,9 +70,8 @@ public class FlankerAi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (agent.remainingDistance < 4 && steps > stepCount)
+        if (agent.remainingDistance < 2 && steps > stepCount)
         {
-            Debug.Log("OwO");
             agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
             stepCount++;
         }
@@ -144,7 +143,7 @@ public class FlankerAi : MonoBehaviour
             if(_DistanceToFirstNode == 0)
             {
                 _DistanceToFirstNode = distance;
-                closetNode = ai._FlankNodes[i];
+                closestNode = ai._FlankNodes[i];
                 closestNodeNumber = i;
                 currentNode = i;
             }
@@ -152,7 +151,7 @@ public class FlankerAi : MonoBehaviour
             if (_DistanceToFirstNode > distance)
             {
                 _DistanceToFirstNode = distance;
-                closetNode = ai._FlankNodes[i];
+                closestNode = ai._FlankNodes[i];
                 closestNodeNumber = i;
                 currentNode = i;
 
@@ -211,7 +210,7 @@ public class FlankerAi : MonoBehaviour
     {
 
         _RouteNodes = new GameObject[ai._FlankNodes.Length];
-        _RouteNodes[0] = closetNode;
+        _RouteNodes[0] = closestNode;
 
         for (int i = 0, x = 0; i < ai._AvailableNodes.Length; i++)
         {
@@ -236,33 +235,6 @@ public class FlankerAi : MonoBehaviour
     
         ai._AvailableNodes[nodeToTravel] = null;
 
-
-
-/*        while (currentNode != nodeToTravel)
-        {
-            currentNode++;
-
-            if (currentNode >= ai._FlankNodes.Length)
-            {
-                currentNode = 0;
-            }
-
-            topCount++;
-        }
-
-        currentNode = closestNodeNumber;
-        while (currentNode != nodeToTravel)
-        {
-            currentNode--;
-
-            if (currentNode <= 0)
-            {
-                currentNode = ai._FlankNodes.Length;
-            }
-
-            bottemCount++;
-        }*/
-
         if(currentNode != nodeToTravel)
         {
             if(currentNode < nodeToTravel)
@@ -271,7 +243,7 @@ public class FlankerAi : MonoBehaviour
             }
            else if(currentNode > nodeToTravel)
            {
-                topCount += currentNode + 1 + ai._FlankNodes.Length - nodeToTravel; ;
+                topCount += (ai._FlankNodes.Length - currentNode) + nodeToTravel + 1;
            }         
         }
 
@@ -279,12 +251,11 @@ public class FlankerAi : MonoBehaviour
         {
             if(currentNode > nodeToTravel)
             {
-                bottemCount = currentNode - nodeToTravel;
+                bottomCount = currentNode - nodeToTravel;
             }
-
             else if (currentNode < nodeToTravel)
             {
-                bottemCount += ai._FlankNodes.Length - currentNode + 1 + nodeToTravel;
+                bottomCount += currentNode + (ai._FlankNodes.Length - nodeToTravel) + 1;
             }
             
         }
@@ -292,9 +263,9 @@ public class FlankerAi : MonoBehaviour
 
 
 
-        if (bottemCount < topCount)
+        if (bottomCount < topCount)
         {
-            CalculateBotPath(bottemCount);
+            CalculateBotPath(bottomCount);
 
         }
         else
@@ -302,8 +273,8 @@ public class FlankerAi : MonoBehaviour
             CalculateTopPath(topCount);
         }
 
-        //bottemCount = 0;
-        //topCount = 0;
+        bottomCount = 0;
+        topCount = 0;
 
         if(ai.flankers.Length > number + 1)
         {
