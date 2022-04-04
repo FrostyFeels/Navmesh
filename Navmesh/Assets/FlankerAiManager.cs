@@ -1,180 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class FlankerAiManager : MonoBehaviour
 {
-    [SerializeField] private LayerMask layer, outerLayer;
-
     public Transform player;
     public Vector3 homePoint;
-    public float distanceFromHomepoint;
-    public float maxDistance;
-
-
-
-    public float flankNodeDistance;
-
-    public GameObject prefab;
-
-    public int availableNodesNumber;
-    public int count;
-
-
-
-    public float minimalNeededDistance;
-
-
-    public float distanceToPlayer;
-
-    public int NodeSpawnCount;
-
-    public GameObject[] _FlankNodes;
     public GameObject[] _AvailableNodes;
     public int[] availableNodes;
-    public Vector3[] _FlankDirections;
-
+    public Dictionary<int, float[]> PriorityNodes = new Dictionary<int, float[]>();
     public FlankerAi[] flankers;
+    public int _FirstFlank;
+    public NodeManager nodemanager;
 
-
-    public bool _CalculatePath;
-    public float _Wait;
-    public float _currentWait;
-
-    
-
-
-
+   
     void Start()
     {
-        _FlankNodes = new GameObject[_FlankDirections.Length];
-        _AvailableNodes = new GameObject[_FlankDirections.Length];
-        for (int i = 0; i < _FlankNodes.Length; i++)
-        {
-            _FlankNodes[i] = Instantiate(prefab);
-
-        }
-
         homePoint = player.transform.position;
-        DrawFlankNodes();
-        CheckAvailableNodes();
-
-
-        flankers[0].FindClosetsNode(0);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void setFlankers()
     {
-        CheckHomePointAvailability();
-
-
-        if(_CalculatePath)
+        foreach (FlankerAi _flanker in flankers)
         {
-            _currentWait += Time.deltaTime;
-
-            if(_currentWait >= _Wait)
-            {
-                flankers[0].FindClosetsNode(0);
-                _currentWait = 0;
-                _CalculatePath = false;
-            }
+            _flanker.state = EnemyAI.State.PathFinding;
         }
     }
-    public void DrawFlankNodes()
+    public void GiveFlanksPriority()
     {
-        for (int i = 0; i < _FlankNodes.Length; i++)
+        int nodeCount = 0;
+        int nodeCount2 = 0;
+        foreach (GameObject _node in _AvailableNodes)
         {
-            _FlankNodes[i].name = NodeSpawnCount.ToString();
-            NodeSpawnCount++;
-            Vector3 endPoint = homePoint + (_FlankDirections[i] * flankNodeDistance);
-            RaycastHit2D hit = Physics2D.Linecast(homePoint, endPoint, outerLayer);
-
-            if (hit)
+            float[] nodes = new float[_AvailableNodes.Length];
+            foreach (GameObject _node2 in _AvailableNodes)
             {
-                _FlankNodes[i].transform.position = hit.point;
-            }
-            else
-            {
-                _FlankNodes[i].transform.position = endPoint;
-            }
-        }
-        NodeSpawnCount = 0;
-    }
-    public void CheckAvailableNodes()
-    {
-        for (int i = 0; i < _FlankNodes.Length; i++)
-        {
-            RaycastHit2D hit = Physics2D.Linecast(homePoint, _FlankNodes[i].transform.position, layer);
-            float distanceToNode = Vector3.Distance(player.transform.position, _FlankNodes[i].transform.position);
-
-            if (!hit && distanceToNode >= minimalNeededDistance)
-            {
-                count++;
-                _FlankNodes[i].GetComponent<SpriteRenderer>().color = Color.red;
-                _AvailableNodes[i] = _FlankNodes[i];
-                
-            }
-            else
-            {
-
-                _FlankNodes[i].GetComponent<SpriteRenderer>().color = Color.cyan;
-                
-                _AvailableNodes[i] = null;
-                CheckWallCollision(_FlankDirections[i], hit.point, i);
-            }
-        }
-        availableNodesNumber = count;
-        availableNodes = new int[availableNodesNumber];
-        count = 0;
-    }
-    public void CheckWallCollision(Vector3 direction, Vector3 point, int number)
-    {
-        Vector3 startLocation = point + direction;
-
-        for (int i = 0; i < 100; i++)
-        {
-            RaycastHit2D hit = Physics2D.Linecast(startLocation, homePoint, layer);
-
-            if (hit)
-            {
-                float distance = Vector3.Distance(hit.point, homePoint);
-
-                if (distanceToPlayer == 0)
+                if(_node != _node2)
                 {
-                    distanceToPlayer = distance;
-                }
-                else if (distanceToPlayer == distance)
-                {
-                    _FlankNodes[number].transform.position = hit.point + (Vector2)direction;
-
-
-                    if (Vector3.Distance(_FlankNodes[number].transform.position, player.position) < flankNodeDistance)
+                    if(nodes.Length >= nodeCount2)
                     {
-                        _FlankNodes[number].transform.position = homePoint + (_FlankDirections[number] * flankNodeDistance);
+                        nodes[nodeCount2] = givePriority(_node.transform, _node2.transform);
                     }
-                    return;
                 }
-                else
-                {
-                    distanceToPlayer = distance;
-                }
-                startLocation = hit.point + (Vector2)direction;
+                nodeCount2++;
             }
+
+       
+            PriorityNodes.Add(availableNodes[nodeCount], nodes);
+
+            nodeCount2 = 0;
+            nodeCount++;
         }
     }
-    public void CheckHomePointAvailability()
+    public float givePriority(Transform start, Transform end)
     {
-        distanceFromHomepoint = Vector3.Distance(homePoint, player.transform.position);
+        Vector3 startDir = start.position - homePoint;
+        Vector3 endDir = end.position - homePoint;
 
-        if (distanceFromHomepoint > maxDistance)
-        {
-            homePoint = player.transform.position;
-            DrawFlankNodes();
-            CheckAvailableNodes();
-            _CalculatePath = true; //MAKE IT THAT IT WAITES A BIT BEFORE RUNNING THE SCRIPT. SO IT ONLY RUNS THE CODE WHEN THE PLAYER INS'T MOVING
-        }
+        endDir.Normalize();
+        startDir.Normalize();
+
+        float diff = Vector3.Distance(endDir, startDir);
+        diff = Mathf.Abs(diff);
+
+        return diff;
     }
 
+    public void attack()
+    {
+        foreach (FlankerAi _flanker in flankers)
+        {
+            _flanker.attack();
+        }
+    }
 
 }

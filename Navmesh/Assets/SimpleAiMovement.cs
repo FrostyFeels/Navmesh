@@ -20,7 +20,7 @@ public class SimpleAiMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInChildren<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         
@@ -66,19 +66,22 @@ public class SimpleAiMovement : MonoBehaviour
 
     public void calculatePathPositions(Vector3 start, Vector3 end)
     {
+        //gets the start and end position on the tilemap
         Vector3Int startPos = tiles.WorldToCell(start);
         Vector3Int endpos = tiles.WorldToCell(end);
 
-
+        //meassure how many steps it has to take to reach the next corner of the pathfinding
         float step = Vector3Int.Distance(startPos, endpos);
         steps = Mathf.Abs(startPos.x - endpos.x) + Mathf.Abs(startPos.y - endpos.y) -1;
 
         Vector3 dir = endpos - startPos;
         dir.Normalize();   
         
+        //Makes the tilemap tile edible
         tiles.SetTileFlags(tiles.WorldToCell(newpos), TileFlags.None);
         tiles.SetColor(tiles.WorldToCell(newpos), Color.black);
 
+        //Goes through a loop that sets the tile on the tilemap and add a tile above and under or right and left to make a thicker path
         for (int i = 0; i < step; i++)
         {
             newpos = newpos + dir;
@@ -90,7 +93,13 @@ public class SimpleAiMovement : MonoBehaviour
             {
                 tiles.SetTile(pos + new Vector3Int(1,0,0), tile);              
                 tiles.SetTile(pos + new Vector3Int(-1, 0, 0), tile);
-            }          
+            } 
+            
+            if(dir.y > dir.x && dir.y > 0)
+            {
+                tiles.SetTile(pos + new Vector3Int(0, 1, 0), tile);
+                tiles.SetTile(pos + new Vector3Int(0, -1, 0), tile);
+            }
         }
        
     }
