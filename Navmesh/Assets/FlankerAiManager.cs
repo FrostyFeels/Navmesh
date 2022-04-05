@@ -66,7 +66,6 @@ public class FlankerAiManager : MonoBehaviour
 
         return diff;
     }
-
     public void attack()
     {
         foreach (FlankerAi _flanker in flankers)

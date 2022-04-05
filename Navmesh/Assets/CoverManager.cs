@@ -23,10 +23,10 @@ public class CoverManager : MonoBehaviour
         UpdateNodes();
         NodesInRange();
     }
-
     public void Update()
     {
         UpdateNodes();
+        NodesInRange();
     }
 
 
@@ -83,15 +83,12 @@ public class CoverManager : MonoBehaviour
     {
         foreach (FlankerAi _flanker in flankManager.flankers)
         {
-            Debug.Log("runs");
             if (_flanker.state != EnemyAI.State.foundCover)
                 return;
 
 
         }
-
         flankManager.attack();
-        Debug.Log("OwO");
     }
 
 }

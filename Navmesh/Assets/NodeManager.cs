@@ -35,16 +35,74 @@ public class NodeManager : MonoBehaviour
 
     public int nodes;
 
+    public int segmentLenght;
+    public int segmentNode;
+
+    public float interval;
+    public float intervalCount;
+
+
 
     public void Start()
     {
-        _FlankNodes = new GameObject[nodes];
 
+
+        segmentLenght = nodes / 8;
+        _FlankNodes = new GameObject[nodes];
+        _FlankDirections = new Vector3[nodes];
+
+        interval = 1 / (float)segmentLenght;
+        
         for (int i = 0; i < _FlankNodes.Length; i++)
         {
             _FlankNodes[i] = Instantiate(prefab, gameObject.transform);
         }
 
+        for (int i = (nodes - (segmentLenght)), x = 0, y = 0; x < nodes; x++)
+        {
+            
+            if(i == nodes)
+            {
+                i = 0;
+            }
+
+            if (intervalCount > segmentLenght * 2)
+            {
+                Debug.Log(intervalCount);
+                intervalCount = 1;
+            }
+
+            if ((i < nodes && i >= nodes - segmentLenght) || i <= segmentLenght) 
+            {
+                _FlankDirections[i] = new Vector3(-1 + (interval * intervalCount), 1, 0);
+                intervalCount++;
+            }
+
+            if(i > segmentLenght && i <= segmentLenght * 3)
+            {
+                _FlankDirections[i] = new Vector3(1, 1 - (interval * intervalCount), 0);
+                intervalCount++;
+            }
+
+            if (i > segmentLenght * 3 && i <= segmentLenght * 5)
+            {
+
+                _FlankDirections[i] = new Vector3(1 - (intervalCount * interval), -1, 0);
+                intervalCount++;
+            }
+
+            if (i > segmentLenght * 5 && i < segmentLenght * 7)
+            {
+                Debug.Log(i);
+                _FlankDirections[i] = new Vector3(-1, -1 + (interval * intervalCount), 0);
+                intervalCount++;
+            }
+
+            i++;
+
+
+
+        }
         DrawFlankNodes();
         CheckAvailableNodes();
     }

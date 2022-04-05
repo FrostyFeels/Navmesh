@@ -11,18 +11,18 @@ public class FlankerAi : EnemyAI
     public FlankerAiManager ai;
     public CoverManager cover;
 
+    public CoverAi coverAi;
+
     public Transform player;
 
 
-    [Header("List of nodes")]
-    //public GameObject[] _FlankNodes;
-    //public GameObject[] _AvailableNodes;
+
 
     public GameObject[] _RouteNodes;
     public int[] _AvailableNodes;
 
-    public int[] _BottemNodes;
-    public int[] _TopNodes;
+    //public int[] _BottemNodes;
+    //public int[] _TopNodes;
 
 
 
@@ -72,13 +72,11 @@ public class FlankerAi : EnemyAI
 
         if (cover.inRange.Count <= 0 && state == State.PathFinding)
         {
-            findCover();
             state = State.CoverSeeking;
         }
 
         if(Vector3.Distance(transform.position, ai.player.position) < range && state == State.PathFinding)
         {
-            findClosestCover();
             state = State.CoverSeeking;
             
         }
@@ -90,89 +88,39 @@ public class FlankerAi : EnemyAI
         }
 
 
-        if (agent.remainingDistance < 5 && steps > stepCount && state == State.PathFinding)
+        if (agent.remainingDistance < 10 && steps > stepCount && state == State.PathFinding)
         {
             agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
             stepCount++;
         }
 
-        if(state == State.CoverSeeking)
+        if(state == State.attack)
         {
-            agent.SetDestination(coverToSeek.transform.position);
-            
-            if (agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance < 2)
+            if (agent.remainingDistance < 10 && steps > stepCount)
             {
-                state = State.foundCover;
+                agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
+                stepCount++;
             }
         }
 
-        if(state == State.attack)
+        Vector3 dir = player.position - transform.position;
+        dir.Normalize();
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, range);
+        Debug.Log(hit.collider.gameObject.tag);
+        if(hit)
         {
-            agent.SetDestination(player.position);
+            if(hit.collider.gameObject.CompareTag("Player"))
+            {
+                agent.isStopped = true;
+            }
         }
 
-        cover.InPosition();
+    
     }
 
     public void attack()
     {
         state = State.attack;
-    }
-
-    public void findCover()
-    {
-        float distance = 0;
-        GameObject node = null;
-        foreach (GameObject _cover in cover.hideable)
-        {
-            if (!cover.used.Contains(_cover))
-            {
-                if (distance == 0)
-                {
-                    distance = Vector3.Distance(_cover.transform.position, player.position);
-                    node = _cover;
-                }
-
-                float newDistance = Vector3.Distance(_cover.transform.position, player.position);
-
-                if (distance > newDistance)
-                {
-                    distance = newDistance;
-                    node = _cover;
-                }
-            }
-        }
-        cover.used.Add(node);
-        coverToSeek = node;
-        agent.SetDestination(node.transform.position);
-    }
-
-    public void findClosestCover()
-    {
-        float distance = 0;
-        GameObject node = null;
-        foreach (GameObject _cover in cover.hideable)
-        {
-            if(!cover.used.Contains(_cover))
-            {
-                if (distance == 0)
-                {
-                    distance = Vector3.Distance(_cover.transform.position, player.position);
-                    node = _cover;
-                }
-
-                float newDistance = Vector3.Distance(_cover.transform.position, player.position);
-
-                if (distance > newDistance)
-                {
-                    distance = newDistance;
-                    node = _cover;
-                }
-            }
-        }
-        cover.used.Add(node);
-        coverToSeek = node;
-        agent.SetDestination(node.transform.position);
     }
 
     //Code to find the closest node you want the A.I to move too

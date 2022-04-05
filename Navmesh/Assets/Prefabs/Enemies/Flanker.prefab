@@ -64,6 +64,7 @@ GameObject:
   - component: {fileID: 6474499795011881815}
   - component: {fileID: 6474499795011881812}
   - component: {fileID: 6474499795011881813}
+  - component: {fileID: 9096196382025436537}
   - component: {fileID: 6474499795011881802}
   m_Layer: 0
   m_Name: Flanker
@@ -151,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf0ec3a0c9fd0b4aaf1a758c678e3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   layer:
     serializedVersion: 2
     m_Bits: 64
@@ -158,12 +160,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   ai: {fileID: 0}
+  cover: {fileID: 0}
+  coverAi: {fileID: 0}
   player: {fileID: 0}
-  homePoint: {x: 0, y: 0, z: 0}
   _RouteNodes: []
   _AvailableNodes: 
-  _BottemNodes: 
-  _TopNodes: 
   closestNode: {fileID: 0}
   closestNodeNumber: 0
   _DistanceToFirstNode: 0
@@ -183,6 +184,24 @@ MonoBehaviour:
   agent: {fileID: 6474499795011881802}
   surface: {fileID: 0}
   nodeToTravel: 0
+  range: 0
+  coverToSeek: {fileID: 0}
+--- !u!114 &9096196382025436537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6474499795011881814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495a03e4072bc884c9c3dcb2aa4fb7c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coverManager: {fileID: 0}
+  cover: {fileID: 0}
+  agent: {fileID: 0}
+  player: {fileID: 0}
 --- !u!195 &6474499795011881802
 NavMeshAgent:
   m_ObjectHideFlags: 0
