@@ -83,7 +83,7 @@ public class CoverManager : MonoBehaviour
     {
         foreach (FlankerAi _flanker in flankManager.flankers)
         {
-            if (_flanker.state != EnemyAI.State.foundCover)
+            if (_flanker.state != EnemyAI.State.foundCover && _flanker.state != EnemyAI.State.attack && _flanker.state != EnemyAI.State.Shooting)
                 return;
 
 

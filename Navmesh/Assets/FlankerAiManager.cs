@@ -25,6 +25,7 @@ public class FlankerAiManager : MonoBehaviour
         foreach (FlankerAi _flanker in flankers)
         {
             _flanker.state = EnemyAI.State.PathFinding;
+            _flanker.agent.isStopped = false;
         }
     }
     public void GiveFlanksPriority()

@@ -54,15 +54,17 @@ public class FlankerAi : EnemyAI
     public int nodeToTravel;
 
     public float range;
+    public float attackRange;
 
     public GameObject coverToSeek;
-
+    private LineRenderer line;
     public override void Start()
     {
         agent = GetComponentInChildren<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         _DistanceToFirstNode = 0;
+        line = GetComponent<LineRenderer>();
 
     }
 
@@ -101,21 +103,59 @@ public class FlankerAi : EnemyAI
                 agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
                 stepCount++;
             }
+
+
+            Vector3 dir2 = player.position - transform.position;
+            dir2.Normalize();
+            RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir2, range);
+
+            if (longHit)
+            {
+                if (longHit.collider.gameObject.CompareTag("Player"))
+                {
+                    agent.isStopped = false;
+                    state = State.Shooting;
+                }
+            }
+
+
+        }
+
+   
+
+        if(state == State.Shooting)
+        {
+            
+            agent.SetDestination(player.position);
         }
 
         Vector3 dir = player.position - transform.position;
         dir.Normalize();
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, range);
-        Debug.Log(hit.collider.gameObject.tag);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, attackRange);
+        
         if(hit)
         {
             if(hit.collider.gameObject.CompareTag("Player"))
             {
                 agent.isStopped = true;
+                line.enabled = true;
+                line.SetPosition(0, transform.position);
+                line.SetPosition(1, hit.point);
+                state = State.Shooting;
+            }
+            else
+            {
+                line.enabled = false;
+                agent.isStopped = false;
             }
         }
 
-    
+
+
+
+
+
+
     }
 
     public void attack()

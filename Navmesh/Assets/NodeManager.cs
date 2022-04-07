@@ -241,6 +241,7 @@ public class NodeManager : MonoBehaviour
         foreach (FlankerAiManager _ai in ai)
         {
             _ai.setFlankers();
+            
             _ai.availableNodes = availableNodes;
             _ai._AvailableNodes = _AvailableNodes;
             _ai.PriorityNodes.Clear();
