@@ -21,10 +21,6 @@ public class FlankerAi : EnemyAI
     public GameObject[] _RouteNodes;
     public int[] _AvailableNodes;
 
-    //public int[] _BottemNodes;
-    //public int[] _TopNodes;
-
-
 
     [Header("Prefabs")]
 
@@ -72,6 +68,14 @@ public class FlankerAi : EnemyAI
     public override void Update()
     {
 
+        if(state == State.PathFinding)
+        {
+            if(cover.inRange.Count <=0)
+            {
+                state = State.CoverSeeking;
+            }
+        }
+
         if (cover.inRange.Count <= 0 && state == State.PathFinding)
         {
             state = State.CoverSeeking;
@@ -82,16 +86,16 @@ public class FlankerAi : EnemyAI
             state = State.CoverSeeking;
             
         }
-
+/*
         if(state == State.PathFinding && agent.isStopped)
         {
             agent.isStopped = false;
-            agent.SetDestination(_RouteNodes[stepCount - 1].transform.position);
-        }
+            agent.SetDestination(_RouteNodes[stepCount].transform.position);
+        }*/
 
-
-        if (agent.remainingDistance < 10 && steps > stepCount && state == State.PathFinding)
+        if (agent.remainingDistance < 5 && steps > stepCount && state == State.PathFinding)
         {
+            agent.isStopped = false;
             agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
             stepCount++;
         }
@@ -102,6 +106,11 @@ public class FlankerAi : EnemyAI
             {
                 agent.SetDestination(_RouteNodes[stepCount].transform.position); //Just add a limit
                 stepCount++;
+            }
+
+            if(steps == stepCount)
+            {
+                state = State.Shooting;
             }
 
 
@@ -344,16 +353,4 @@ public class FlankerAi : EnemyAI
         stepCount++;
 
     }
-
- /*   private void RemoveElement<T>(ref T[] arr, int index)
-    {
-
-        for (int i = index; i < arr.Length - 1; i++)
-        {
-            arr[i] = arr[i + 1];         
-        }
-
-        Array.Resize(ref arr, arr.Length - 1);
-    }*/
-
 }

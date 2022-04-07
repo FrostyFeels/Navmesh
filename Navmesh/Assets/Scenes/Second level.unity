@@ -17031,6 +17031,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9096196382025436537, guid: 20a4ed31c77779a4da372c352eb589a1, type: 3}
+      propertyPath: flankerai
+      value: 
+      objectReference: {fileID: 2100179743}
+    - target: {fileID: 9096196382025436537, guid: 20a4ed31c77779a4da372c352eb589a1, type: 3}
       propertyPath: coverManager
       value: 
       objectReference: {fileID: 2012078721}
@@ -17194,6 +17198,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9096196382025436537, guid: 20a4ed31c77779a4da372c352eb589a1, type: 3}
+      propertyPath: flankerai
+      value: 
+      objectReference: {fileID: 1011410117}
     - target: {fileID: 9096196382025436537, guid: 20a4ed31c77779a4da372c352eb589a1, type: 3}
       propertyPath: coverManager
       value: 
@@ -18298,22 +18306,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6474499795011881814, guid: 20a4ed31c77779a4da372c352eb589a1, type: 3}
   m_PrefabInstance: {fileID: 732919401}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1176900974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176900970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 495a03e4072bc884c9c3dcb2aa4fb7c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coverManager: {fileID: 2012078721}
-  cover: {fileID: 0}
-  agent: {fileID: 0}
-  player: {fileID: 0}
 --- !u!120 &1176900976
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -20823,6 +20815,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9016016383342512756, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016016383342512756, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9016016383342512758, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
       propertyPath: tiles
       value: 
@@ -20830,6 +20830,14 @@ PrefabInstance:
     - target: {fileID: 9016016383342512759, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016016383342512759, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016016383342512759, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9016016383342512759, guid: 743a050e31846b14c985f0cc7cbb3f39, type: 3}
       propertyPath: m_LocalPosition.x
@@ -21059,7 +21067,7 @@ MonoBehaviour:
   - {fileID: 1068040052}
   _AvailableNodes: []
   availableNodes: 
-  nodes: 24
+  nodes: 40
   segmentLenght: 0
   segmentNode: 0
   interval: 0

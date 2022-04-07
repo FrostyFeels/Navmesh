@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class CoverAi : MonoBehaviour
 {
-    FlankerAi flankerai;
+    public FlankerAi flankerai;
     public CoverManager coverManager;
     public GameObject cover;
     public NavMeshAgent agent;
@@ -43,29 +43,70 @@ public class CoverAi : MonoBehaviour
 
 
         float distance2 = 0;
-        foreach (GameObject _cover in coverManager.hideable)
+
+        if(coverManager.inRange.Count <= 0)
         {
-            distance2 = Vector3.Distance(_cover.transform.position, flankerai._RouteNodes[flankerai.stepCount].transform.position);
-            if (!coverManager.used.Contains(_cover))
+            foreach (GameObject _cover in coverManager.hideable)
             {
-                if (distance == 0)
+                distance2 = Vector3.Distance(_cover.transform.position, flankerai._RouteNodes[flankerai.stepCount - 1].transform.position);
+                if (!coverManager.used.Contains(_cover))
                 {
-                    distance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
-                    node = _cover;
-                }
+                    if (distance == 0)
+                    {
+                        distance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
+                        node = _cover;
+                    }
 
-                float newDistance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
+                    float newDistance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
 
-                if (distance > newDistance)
-                {
-                    distance = newDistance;
-                    node = _cover;
+                    if (distance > newDistance)
+                    {
+                        distance = newDistance;
+                        node = _cover;
+                    }
                 }
             }
         }
-        coverManager.used.Add(node);
+        else
+        {
+            foreach (GameObject _cover in coverManager.inRange) 
+            {
+                distance2 = Vector3.Distance(_cover.transform.position, flankerai._RouteNodes[flankerai.stepCount -1].transform.position);
+                if (!coverManager.used.Contains(_cover))
+                {
+                    if (distance == 0)
+                    {
+                        distance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
+                        node = _cover;
+                    }
+
+                    float newDistance = Vector3.Distance(_cover.transform.position, player.position) + distance2;
+
+                    if (distance > newDistance)
+                    {
+                        distance = newDistance;
+                        node = _cover;
+                    }
+                }
+            }
+        }
+
+        if(!coverManager.used.Contains(node))
+        {
+            coverManager.used.Add(node);
+        }
+   
         cover = node;
-        agent.SetDestination(cover.transform.position);
+
+        if(cover == null)
+        {
+
+        }
+        else
+        {
+            agent.SetDestination(cover.transform.position);
+        }
+
     }
     public void CheckIfNotSeen()
     {

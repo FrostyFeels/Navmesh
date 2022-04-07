@@ -26,6 +26,7 @@ public class FlankerAiManager : MonoBehaviour
         {
             _flanker.state = EnemyAI.State.PathFinding;
             _flanker.agent.isStopped = false;
+            _flanker.cover.used.Remove(_flanker.coverToSeek);
         }
     }
     public void GiveFlanksPriority()

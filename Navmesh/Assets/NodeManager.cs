@@ -45,8 +45,6 @@ public class NodeManager : MonoBehaviour
 
     public void Start()
     {
-
-
         segmentLenght = nodes / 8;
         _FlankNodes = new GameObject[nodes];
         _FlankDirections = new Vector3[nodes];
@@ -99,9 +97,6 @@ public class NodeManager : MonoBehaviour
             }
 
             i++;
-
-
-
         }
         DrawFlankNodes();
         CheckAvailableNodes();

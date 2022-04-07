@@ -68,7 +68,6 @@ public class CoverManager : MonoBehaviour
                 {
                     inRange.Add(_hideable);
                 }
-           
             }
             else
             {
