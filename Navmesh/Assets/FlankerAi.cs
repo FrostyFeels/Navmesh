@@ -6,7 +6,7 @@ using System;
 
 public class FlankerAi : EnemyAI
 {
-    [SerializeField] private LayerMask layer, outerLayer;
+    [SerializeField] private LayerMask layer, outerLayer, playerLayer;
 
     public FlankerAiManager ai;
     public CoverManager cover;
@@ -52,6 +52,12 @@ public class FlankerAi : EnemyAI
     public float range;
     public float attackRange;
 
+    public bool hiding;
+    public float timer;
+    public bool startedTimer;
+
+    public bool shot;
+
     public GameObject coverToSeek;
     private LineRenderer line;
     public override void Start()
@@ -61,12 +67,57 @@ public class FlankerAi : EnemyAI
         agent.updateUpAxis = false;
         _DistanceToFirstNode = 0;
         line = GetComponent<LineRenderer>();
+        coverAi = GetComponent<CoverAi>();
+
+    }
+
+    public IEnumerator stopHiding()
+    {
+        yield return new WaitForSeconds(timer);
+        hiding = false;
+        if(state == State.attacked)
+        {
+            state = State.Shooting;
+        }
 
     }
 
     // Update is called once per frame
     public override void Update()
     {
+
+        if (state == State.attacked)
+        {
+            if(!startedTimer)
+            {
+                StartCoroutine(stopHiding());
+            }
+
+
+            Vector3 dir2 = player.position - transform.position;
+            dir2.Normalize();
+            RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir2, range, playerLayer);
+
+            if (longHit)
+            {
+                if (longHit.collider.gameObject.CompareTag("Player"))
+                {
+    
+                }
+                else
+                {
+                    agent.isStopped = true;
+                    return;
+                }
+            }
+
+            agent.isStopped = false;
+            agent.SetDestination(coverAi.cover.transform.position);
+            return;
+        }
+
+      
+            
 
         if(state == State.PathFinding)
         {
@@ -86,12 +137,7 @@ public class FlankerAi : EnemyAI
             state = State.CoverSeeking;
             
         }
-/*
-        if(state == State.PathFinding && agent.isStopped)
-        {
-            agent.isStopped = false;
-            agent.SetDestination(_RouteNodes[stepCount].transform.position);
-        }*/
+
 
         if (agent.remainingDistance < 5 && steps > stepCount && state == State.PathFinding)
         {
@@ -116,7 +162,7 @@ public class FlankerAi : EnemyAI
 
             Vector3 dir2 = player.position - transform.position;
             dir2.Normalize();
-            RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir2, range);
+            RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir2, range, playerLayer);
 
             if (longHit)
             {
@@ -130,22 +176,30 @@ public class FlankerAi : EnemyAI
 
         }
 
+
+
    
 
         if(state == State.Shooting)
         {
-            
             agent.SetDestination(player.position);
         }
 
         Vector3 dir = player.position - transform.position;
         dir.Normalize();
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, attackRange);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, attackRange, playerLayer);
         
         if(hit)
         {
             if(hit.collider.gameObject.CompareTag("Player"))
-            {
+            {     
+                if(!shot)
+                {
+                    shot = true;
+                    ai.hits++;
+                    ai.timer2 = 0;
+                    StartCoroutine(wait());
+                }
                 agent.isStopped = true;
                 line.enabled = true;
                 line.SetPosition(0, transform.position);
@@ -165,6 +219,13 @@ public class FlankerAi : EnemyAI
 
 
 
+    }
+
+
+    public IEnumerator wait()
+    {
+        yield return new WaitForSeconds(2);
+        shot = false;
     }
 
     public void attack()

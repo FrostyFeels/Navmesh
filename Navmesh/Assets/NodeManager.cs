@@ -66,7 +66,6 @@ public class NodeManager : MonoBehaviour
 
             if (intervalCount > segmentLenght * 2)
             {
-                Debug.Log(intervalCount);
                 intervalCount = 1;
             }
 
@@ -91,7 +90,6 @@ public class NodeManager : MonoBehaviour
 
             if (i > segmentLenght * 5 && i < segmentLenght * 7)
             {
-                Debug.Log(i);
                 _FlankDirections[i] = new Vector3(-1, -1 + (interval * intervalCount), 0);
                 intervalCount++;
             }
@@ -119,7 +117,6 @@ public class NodeManager : MonoBehaviour
     }
     public void CheckAvailableNodes()
     {
-
         _AvailableNodes = new GameObject[_FlankDirections.Length];
         availableNodes = new int[_FlankDirections.Length];
 
@@ -189,14 +186,12 @@ public class NodeManager : MonoBehaviour
                     _FlankNodes[number].transform.position = hit.point + (Vector2)direction;
                     Vector3 wantedposition = homePoint + (_FlankDirections[number] * flankNodeDistance);
 
-
                     float distance1 = Vector3.Distance(_FlankNodes[number].transform.position, homePoint);
                     float distance2 = Vector3.Distance(wantedposition, homePoint);
 
-
                     if (distance1 < distance2)
                     {
-                        _FlankNodes[number].transform.position = homePoint + (_FlankDirections[number] * flankNodeDistance);
+                        _FlankNodes[number].transform.position = wantedposition;
                     }
                     return;
                 }

@@ -20,6 +20,7 @@ public class CoverAi : MonoBehaviour
     }
     public void Update()
     {
+
         if(flankerai.state == EnemyAI.State.CoverSeeking)
         {
             if(cover == null)

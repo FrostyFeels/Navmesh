@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour
         foundCover,
         attack,
         Shooting,
+        attacked,
         ThrowingGrenade,
         Swarming
     }

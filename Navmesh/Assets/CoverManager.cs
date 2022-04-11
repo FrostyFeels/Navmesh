@@ -36,7 +36,6 @@ public class CoverManager : MonoBehaviour
         {
             RaycastHit2D ray = Physics2D.Linecast(_cover.transform.position, player.position, layer);
 
-
             if (!ray)
             {
                 if (!found.Contains(_cover))
