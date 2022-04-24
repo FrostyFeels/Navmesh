@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Tilemaps;
 
 public class SimpleAiMovement : EnemyAI
 {
@@ -10,8 +7,8 @@ public class SimpleAiMovement : EnemyAI
     public int range = 10;
     NavMeshAgent agent;
     public NavMeshSurface2d surface;
-    public CoverManager cover;
-    public GameObject cover2;
+    public CoverManager coverManager;
+    public GameObject cover;
     public GameObject node;
     public FlankerAiManager manager;
     LineRenderer line;
@@ -32,10 +29,11 @@ public class SimpleAiMovement : EnemyAI
 
      public override void Update()
      {
-        Vector3 dir2 = cover.player.position - transform.position;
-        dir2.Normalize();
-        RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir2, range, layer);
+        Vector3 dir = coverManager.player.position - transform.position;
+        dir.Normalize();
+        RaycastHit2D longHit = Physics2D.Raycast(transform.position, dir, range, layer);
 
+        //checks if the player can be shot
         if (longHit)
         {
            
@@ -73,12 +71,13 @@ public class SimpleAiMovement : EnemyAI
             return;
         }
 
-        if(cover2 != null)
+        if(cover != null)
         {
             agent.isStopped = false;
-            agent.SetDestination(cover2.transform.position);
+            agent.SetDestination(cover.transform.position);
         }
 
+       
         if(agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance < 2)
         {
             if (manager.throwNade && grenade != null)
@@ -86,13 +85,10 @@ public class SimpleAiMovement : EnemyAI
                 ThrowGrenade();
             }
         }
-
-
-
-
-
     }
 
+
+    //Cover seeking for normal A.I
     public void GetCoverToHide()
     {
         float distance = 0;
@@ -101,12 +97,12 @@ public class SimpleAiMovement : EnemyAI
 
         float distance2 = 0;
 
-        if (cover.inRange.Count <= 0)
+        if (coverManager.inRange.Count <= 0)
         {
-            foreach (GameObject _cover in cover.hideable)
+            foreach (GameObject _cover in coverManager.hideable)
             {
 
-                if (!cover.used.Contains(_cover))
+                if (!coverManager.used.Contains(_cover))
                 {
                     if (distance == 0)
                     {
@@ -126,9 +122,9 @@ public class SimpleAiMovement : EnemyAI
         }
         else
         {
-            foreach (GameObject _cover in cover.inRange)
+            foreach (GameObject _cover in coverManager.inRange)
             {
-                if (!cover.used.Contains(_cover))
+                if (!coverManager.used.Contains(_cover))
                 {
                     if (distance == 0)
                     {
@@ -147,26 +143,27 @@ public class SimpleAiMovement : EnemyAI
             }
         }
 
-        if (!cover.used.Contains(node))
+        if (!coverManager.used.Contains(node))
         {
-            cover.used.Add(node);
+            coverManager.used.Add(node);
         }
 
-        cover2 = node;
+        cover = node;
 
-        if (cover2 == null)
+        if (cover == null)
         {
 
         }
         else
         {
-            agent.SetDestination(cover2.transform.position);
+            agent.SetDestination(cover.transform.position);
             state = State.CoverSeeking;
         }
 
         
     }
 
+    //Nade throw
     public void ThrowGrenade()
     {
         GameObject _grenade = Instantiate(grenade, transform.parent);

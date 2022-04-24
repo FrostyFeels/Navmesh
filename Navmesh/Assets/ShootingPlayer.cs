@@ -24,6 +24,7 @@ public class ShootingPlayer : MonoBehaviour
 
     }
 
+    //draw shooting lines
     public void drawLines()
     {
         Vector3 endPos = mousePosition;
@@ -37,6 +38,7 @@ public class ShootingPlayer : MonoBehaviour
         shooting(dir);
     }
 
+    //shooting logic
     public void shooting(Vector3 dir)
     {
         dir.Normalize();

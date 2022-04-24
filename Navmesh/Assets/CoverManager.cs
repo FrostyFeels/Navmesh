@@ -29,7 +29,7 @@ public class CoverManager : MonoBehaviour
         NodesInRange();
     }
 
-
+    //checks what nodes are in hideable or seen by the player
     public void UpdateNodes()
     {
         foreach (GameObject _cover in covers)
@@ -56,6 +56,8 @@ public class CoverManager : MonoBehaviour
             }
         }
     }
+
+    //Checks what covers are in the range of the player
     public void NodesInRange()
     {
         foreach (GameObject _hideable in hideable)
@@ -77,6 +79,8 @@ public class CoverManager : MonoBehaviour
             }
         }
     }
+
+    //Checks if both A.I are either in cover or fighting to send them to the player
     public void InPosition()
     {
         foreach (FlankerAi _flanker in flankManager.flankers)

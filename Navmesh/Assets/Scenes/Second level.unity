@@ -181,7 +181,7 @@ PrefabInstance:
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: cover
       value: 
-      objectReference: {fileID: 2012078721}
+      objectReference: {fileID: 0}
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: range
       value: 10
@@ -190,6 +190,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
+      propertyPath: coverManager
+      value: 
+      objectReference: {fileID: 2012078721}
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: layer.m_Bits
       value: 448
@@ -20697,7 +20701,7 @@ PrefabInstance:
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: cover
       value: 
-      objectReference: {fileID: 2012078721}
+      objectReference: {fileID: 0}
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: grenade
       value: 
@@ -20706,6 +20710,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
+      propertyPath: coverManager
+      value: 
+      objectReference: {fileID: 2012078721}
     - target: {fileID: 4268103714198887459, guid: 6a01a80fc78e0c3429f41c5d2530f9bf, type: 3}
       propertyPath: layer.m_Bits
       value: 448
@@ -21437,10 +21445,10 @@ MonoBehaviour:
   maxDistance: 12
   availableNodesNumber: 0
   count: 0
-  ai:
+  flankerAiManager:
   - {fileID: 1068040052}
   _AvailableNodes: []
-  availableNodes: 
+  availableNodeNumber: 
   nodes: 40
   segmentLenght: 0
   segmentNode: 0

@@ -26,10 +26,4 @@ public class EnemyAI : MonoBehaviour
     {
         
     }
-
-
-
-
-
-
 }

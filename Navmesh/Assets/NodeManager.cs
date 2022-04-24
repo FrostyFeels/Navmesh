@@ -29,9 +29,9 @@ public class NodeManager : MonoBehaviour
     public int count;
 
 
-    public FlankerAiManager[] ai;
+    public FlankerAiManager[] flankerAiManager;
     public GameObject[] _AvailableNodes;
-    public int[] availableNodes;
+    public int[] availableNodeNumber;
 
     public int nodes;
 
@@ -56,9 +56,10 @@ public class NodeManager : MonoBehaviour
             _FlankNodes[i] = Instantiate(prefab, gameObject.transform);
         }
 
+
+        //Gives all flank directions automatically
         for (int i = (nodes - (segmentLenght)), x = 0, y = 0; x < nodes; x++)
-        {
-            
+        {        
             if(i == nodes)
             {
                 i = 0;
@@ -99,10 +100,14 @@ public class NodeManager : MonoBehaviour
         DrawFlankNodes();
         CheckAvailableNodes();
     }
+
+    
     public void Update()
     {
         CheckHomePointAvailability();
     }
+
+    //Draws the initial squares
     public void DrawFlankNodes()
     {
         for (int i = 0; i < _FlankNodes.Length; i++)
@@ -115,10 +120,12 @@ public class NodeManager : MonoBehaviour
         }
         NodeSpawnCount = 0;
     }
+
+    //Checks if the drawn squares can be seen or not
     public void CheckAvailableNodes()
     {
         _AvailableNodes = new GameObject[_FlankDirections.Length];
-        availableNodes = new int[_FlankDirections.Length];
+        availableNodeNumber = new int[_FlankDirections.Length];
 
         for (int i = 0, x = 0; i < _FlankNodes.Length; i++)
         {
@@ -147,7 +154,7 @@ public class NodeManager : MonoBehaviour
             {
                 _FlankNodes[i].GetComponent<SpriteRenderer>().color = Color.green;
                 _AvailableNodes[x] = _FlankNodes[i];
-                availableNodes[x] = i;
+                availableNodeNumber[x] = i;
                 x++;
                 count++;
             }
@@ -155,7 +162,7 @@ public class NodeManager : MonoBehaviour
             {
                 _FlankNodes[i].GetComponent<SpriteRenderer>().color = Color.yellow;
                 RemoveElement(ref _AvailableNodes, x);
-                RemoveElement(ref availableNodes, x);
+                RemoveElement(ref availableNodeNumber, x);
             }
 
         }
@@ -165,6 +172,8 @@ public class NodeManager : MonoBehaviour
 
         SendNodes();
     }
+
+    //Checks if the squares have collision with the walls
     public void CheckWallCollision(Vector3 direction, Vector3 point, int number)
     {
         Vector3 startLocation = point + direction;
@@ -205,6 +214,8 @@ public class NodeManager : MonoBehaviour
 
         _FlankNodes[number].transform.position = homePoint + (_FlankDirections[number] * flankNodeDistance);
     }
+
+    //Checks if the player is still in the area
     public void CheckHomePointAvailability()
     {
         distanceFromHomepoint = Vector3.Distance(homePoint, player.transform.position);
@@ -226,13 +237,15 @@ public class NodeManager : MonoBehaviour
 
         Array.Resize(ref arr, arr.Length - 1);
     }
+
+    //Sets all the information needed for the flankers when nodes reset
     public void SendNodes()
     {
-        foreach (FlankerAiManager _ai in ai)
+        foreach (FlankerAiManager _ai in flankerAiManager)
         {
             _ai.setFlankers();
             
-            _ai.availableNodes = availableNodes;
+            _ai.availableNodes = availableNodeNumber;
             _ai._AvailableNodes = _AvailableNodes;
             _ai.PriorityNodes.Clear();
             _ai.GiveFlanksPriority();

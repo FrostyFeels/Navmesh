@@ -20,7 +20,7 @@ public class CoverAi : MonoBehaviour
     }
     public void Update()
     {
-
+        //checks if they are seeking cover
         if(flankerai.state == EnemyAI.State.CoverSeeking)
         {
             if(cover == null)
@@ -29,14 +29,20 @@ public class CoverAi : MonoBehaviour
             }
             CheckIfNotSeen();
 
+            //if close enough to cover set the foundCover state
             if (agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance < 2)
             {
                 flankerai.state = EnemyAI.State.foundCover;
             }
         }
+
+        //checks if both A.I are ready to flank
         coverManager.InPosition();
 
     }
+
+    //Goes through a list of inrange covers or hideable covers
+    //It checks the cover distance from the player and from the path it would take after finding cover
     public void GetCoverToHide()
     {
         float distance = 0;
@@ -109,6 +115,8 @@ public class CoverAi : MonoBehaviour
         }
 
     }
+
+    //Check if the cover stays unseen to the player
     public void CheckIfNotSeen()
     {
         if (coverManager.found.Contains(cover))

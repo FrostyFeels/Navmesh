@@ -53,7 +53,7 @@ public class FlankerAiManager : MonoBehaviour
 
         }
 
-
+        //slowly lowers the amount of hits the player has takens
         if(hits > 0)
         {
             timer2 += Time.deltaTime;
@@ -71,6 +71,7 @@ public class FlankerAiManager : MonoBehaviour
         }
     }
 
+    //resets the flankers after a reset of nodes has happened
     public void setFlankers()
     {
         foreach (FlankerAi _flanker in flankers)
@@ -83,6 +84,7 @@ public class FlankerAiManager : MonoBehaviour
         setNormals();
     }
 
+    //resets the normal enemies after a reset of nodes has happened
     public void setNormals()
     {
         foreach (SimpleAiMovement _normal in normals)
@@ -90,6 +92,8 @@ public class FlankerAiManager : MonoBehaviour
             _normal.GetCoverToHide();
         }
     }
+
+    //makes a list of all the nodes and their highest priority to a other node
     public void GiveFlanksPriority()
     {
         int nodeCount = 0;
@@ -116,6 +120,9 @@ public class FlankerAiManager : MonoBehaviour
             nodeCount++;
         }
     }
+
+
+    //gives the priority to the list depending on start and end of node
     public float givePriority(Transform start, Transform end)
     {
         Vector3 startDir = start.position - homePoint;
@@ -129,6 +136,8 @@ public class FlankerAiManager : MonoBehaviour
 
         return diff;
     }
+
+    //send the A.I to attack
     public void attack()
     {
         foreach (FlankerAi _flanker in flankers)

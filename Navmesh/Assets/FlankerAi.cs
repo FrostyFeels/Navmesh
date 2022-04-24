@@ -71,6 +71,7 @@ public class FlankerAi : EnemyAI
 
     }
 
+    //To send the back into fighting after hiding
     public IEnumerator stopHiding()
     {
         yield return new WaitForSeconds(timer);
@@ -86,6 +87,7 @@ public class FlankerAi : EnemyAI
     public override void Update()
     {
 
+        //if the ai is attacked move back to hiding spot till you can't see the player anymore
         if (state == State.attacked)
         {
             if(!startedTimer)
@@ -116,29 +118,31 @@ public class FlankerAi : EnemyAI
             return;
         }
 
-      
-            
 
-        if(state == State.PathFinding)
-        {
-            if(cover.inRange.Count <=0)
-            {
-                state = State.CoverSeeking;
-            }
-        }
 
+
+        /*  if(state == State.PathFinding)
+          {
+              if(cover.inRange.Count <=0)
+              {
+                  state = State.CoverSeeking;
+              }
+          }*/
+
+        //sets state to coverseeking if there are 0 covers in the range of the player
         if (cover.inRange.Count <= 0 && state == State.PathFinding)
         {
             state = State.CoverSeeking;
         }
 
+        //Sets the A.I to coverseeking when close enough to make sure they flank at the same time
         if(Vector3.Distance(transform.position, ai.player.position) < range && state == State.PathFinding)
         {
             state = State.CoverSeeking;
             
         }
 
-
+        //walks the agent through the nodes
         if (agent.remainingDistance < 5 && steps > stepCount && state == State.PathFinding)
         {
             agent.isStopped = false;
@@ -146,6 +150,7 @@ public class FlankerAi : EnemyAI
             stepCount++;
         }
 
+        //the shooting state logic
         if(state == State.attack)
         {
             if (agent.remainingDistance < 10 && steps > stepCount)
@@ -172,19 +177,20 @@ public class FlankerAi : EnemyAI
                     state = State.Shooting;
                 }
             }
-
-
         }
 
 
 
    
-
+        //for if the A.I needs to directly go to player
         if(state == State.Shooting)
         {
             agent.SetDestination(player.position);
         }
 
+
+
+        //When the A.I is in range walk directly to him
         Vector3 dir = player.position - transform.position;
         dir.Normalize();
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, attackRange, playerLayer);
@@ -221,7 +227,7 @@ public class FlankerAi : EnemyAI
 
     }
 
-
+    //Stop shooting for 2 seconds
     public IEnumerator wait()
     {
         yield return new WaitForSeconds(2);
@@ -273,6 +279,9 @@ public class FlankerAi : EnemyAI
 
       
     }
+    
+
+    //Calculates what node it wants to travel too
     public void CreatePath(int number)
     {
 
@@ -310,6 +319,8 @@ public class FlankerAi : EnemyAI
 
         CalculateShortestPath(number);
     }
+
+    //Calculates the path the first time
     public void FirstPathCreation(int number)
     {
         _RouteNodes = new GameObject[ai.nodemanager._FlankNodes.Length];
@@ -321,6 +332,8 @@ public class FlankerAi : EnemyAI
         ai._FirstFlank = nodeToTravel;
         CalculateShortestPath(number);
     }
+
+    //Calculates the shortest path
     public void CalculateShortestPath(int number)
     {
 
@@ -372,6 +385,8 @@ public class FlankerAi : EnemyAI
             ai.flankers[number + 1].FindClosetsNode(number + 1);
         }
     }
+
+    //Calculates the path if the shortest route is throught the bottem
     public void CalculateBotPath(int numberOfSteps)
     {
         steps = 1;
@@ -390,6 +405,8 @@ public class FlankerAi : EnemyAI
         agent.SetDestination(_RouteNodes[0].transform.position);
         stepCount++;
     }
+
+    //calculates the path if the shortest route is through the top
     public void CalculateTopPath(int numberOfSteps)
     {
         steps = 1;

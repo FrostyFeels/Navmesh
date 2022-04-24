@@ -32,14 +32,10 @@ public class VisionCone : MonoBehaviour
 
         for (int i = 0; i < ray.Length; i++)
         {
-            
-
-
+         
             Vector3Int pos = tiles.WorldToCell(ray[i].point);
             Debug.Log(pos);
             tiles.SetTile(pos, tile);
-
-
         }
   
 
